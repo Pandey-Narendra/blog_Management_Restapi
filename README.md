@@ -1,66 +1,406 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Laravel Blog API
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+This project is a RESTful API built with the Laravel framework, providing user authentication and blog post management functionalities. Authenticated users can create, read, update, and delete their own blog posts, with a distinction between published and unpublished posts. The API also supports management of categories, tags, and comments.
 
-## About Laravel
+## Requirements
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+- PHP 8.0 or higher
+- Composer
+- Laravel 8.x or higher
+- MySQL or any other supported database
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Installation
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+1. **Clone the repository**
 
-## Learning Laravel
+    ```bash
+    git clone https://github.com/yourusername/laravel-blog-api.git
+    cd laravel-blog-api
+    ```
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+2. **Install dependencies**
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+    ```bash
+    composer install
+    ```
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+3. **Set up environment variables**
 
-## Laravel Sponsors
+    Copy the `.env.example` file to `.env` and update the database and other configurations as needed.
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+    ```bash
+    cp .env.example .env
+    ```
 
-### Premium Partners
+4. **Generate application key**
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+    ```bash
+    php artisan key:generate
+    ```
 
-## Contributing
+5. **Run migrations**
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+    ```bash
+    php artisan migrate
+    ```
 
-## Code of Conduct
+6. **Run the application**
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+    ```bash
+    php artisan serve
+    ```
 
-## Security Vulnerabilities
+## API Endpoints
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+### User Authentication
+
+#### Register
+
+- **URL**: `/api/register`
+- **Method**: `POST`
+- **Body**:
+    ```json
+    {
+        "name": "John Doe",
+        "email": "johndoe@example.com",
+        "password": "password123",
+        "password_confirmation": "password123"
+    }
+    ```
+
+#### Login
+
+- **URL**: `/api/login`
+- **Method**: `POST`
+- **Body**:
+    ```json
+    {
+        "email": "johndoe@example.com",
+        "password": "password123"
+    }
+    ```
+
+#### Logout
+
+- **URL**: `/api/logout`
+- **Method**: `POST`
+- **Headers**:
+    ```json
+    {
+        "Authorization": "Bearer {access_token}"
+    }
+    ```
+
+### Post Management
+
+#### Create a Post
+
+- **URL**: `/api/posts`
+- **Method**: `POST`
+- **Headers**:
+    ```json
+    {
+        "Authorization": "Bearer {access_token}"
+    }
+    ```
+- **Body**:
+    ```json
+    {
+        "title": "First Post",
+        "content": "This is the content of the first post.",
+        "slug": "first-post",
+        "category_id": 1,
+        "published": true,
+        "featured_image": "http://example.com/image.jpg",
+        "tags": [1, 2]
+    }
+    ```
+
+#### Get All Posts
+
+- **URL**: `/api/posts`
+- **Method**: `GET`
+- **Headers**:
+    ```json
+    {
+        "Authorization": "Bearer {access_token}"
+    }
+    ```
+
+#### Get a Specific Post
+
+- **URL**: `/api/posts/{id}`
+- **Method**: `GET`
+- **Headers**:
+    ```json
+    {
+        "Authorization": "Bearer {access_token}"
+    }
+    ```
+
+#### Update a Post
+
+- **URL**: `/api/posts/{id}`
+- **Method**: `PUT`
+- **Headers**:
+    ```json
+    {
+        "Authorization": "Bearer {access_token}"
+    }
+    ```
+- **Body**:
+    ```json
+    {
+        "title": "Updated Post",
+        "content": "Updated content.",
+        "slug": "updated-post",
+        "category_id": 1,
+        "published": true,
+        "featured_image": "http://example.com/updated-image.jpg",
+        "tags": [1, 3]
+    }
+    ```
+
+#### Delete a Post
+
+- **URL**: `/api/posts/{id}`
+- **Method**: `DELETE`
+- **Headers**:
+    ```json
+    {
+        "Authorization": "Bearer {access_token}"
+    }
+    ```
+
+### Category Management
+
+#### Create a Category
+
+- **URL**: `/api/categories`
+- **Method**: `POST`
+- **Headers**:
+    ```json
+    {
+        "Authorization": "Bearer {access_token}"
+    }
+    ```
+- **Body**:
+    ```json
+    {
+        "category_name": "Technology"
+    }
+    ```
+
+#### Get All Categories
+
+- **URL**: `/api/categories`
+- **Method**: `GET`
+
+#### Get a Specific Category
+
+- **URL**: `/api/categories/{id}`
+- **Method**: `GET`
+
+#### Update a Category
+
+- **URL**: `/api/categories/{id}`
+- **Method**: `PUT`
+- **Headers**:
+    ```json
+    {
+        "Authorization": "Bearer {access_token}"
+    }
+    ```
+- **Body**:
+    ```json
+    {
+        "category_name": "Updated Category"
+    }
+    ```
+
+#### Delete a Category
+
+- **URL**: `/api/categories/{id}`
+- **Method**: `DELETE`
+- **Headers**:
+    ```json
+    {
+        "Authorization": "Bearer {access_token}"
+    }
+    ```
+
+### Tag Management
+
+#### Create a Tag
+
+- **URL**: `/api/tags`
+- **Method**: `POST`
+- **Headers**:
+    ```json
+    {
+        "Authorization": "Bearer {access_token}"
+    }
+    ```
+- **Body**:
+    ```json
+    {
+        "tag_name": "Laravel"
+    }
+    ```
+
+#### Get All Tags
+
+- **URL**: `/api/tags`
+- **Method**: `GET`
+
+#### Get a Specific Tag
+
+- **URL**: `/api/tags/{id}`
+- **Method**: `GET`
+
+#### Update a Tag
+
+- **URL**: `/api/tags/{id}`
+- **Method**: `PUT`
+- **Headers**:
+    ```json
+    {
+        "Authorization": "Bearer {access_token}"
+    }
+    ```
+- **Body**:
+    ```json
+    {
+        "tag_name": "Updated Tag"
+    }
+    ```
+
+#### Delete a Tag
+
+- **URL**: `/api/tags/{id}`
+- **Method**: `DELETE`
+- **Headers**:
+    ```json
+    {
+        "Authorization": "Bearer {access_token}"
+    }
+    ```
+
+### Comment Management
+
+#### Create a Comment
+
+- **URL**: `/api/comments`
+- **Method**: `POST`
+- **Headers**:
+    ```json
+    {
+        "Authorization": "Bearer {access_token}"
+    }
+    ```
+- **Body**:
+    ```json
+    {
+        "post_id": 1,
+        "comment_content": "This is a comment."
+    }
+    ```
+
+#### Get All Comments
+
+- **URL**: `/api/comments`
+- **Method**: `GET`
+
+#### Get a Specific Comment
+
+- **URL**: `/api/comments/{id}`
+- **Method**: `GET`
+
+#### Update a Comment
+
+- **URL**: `/api/comments/{id}`
+- **Method**: `PUT`
+- **Headers**:
+    ```json
+    {
+        "Authorization": "Bearer {access_token}"
+    }
+    ```
+- **Body**:
+    ```json
+    {
+        "comment_content": "Updated comment content."
+    }
+    ```
+
+#### Delete a Comment
+
+- **URL**: `/api/comments/{id}`
+- **Method**: `DELETE`
+- **Headers**:
+    ```json
+    {
+        "Authorization": "Bearer {access_token}"
+    }
+    ```
+
+## Database Schema
+
+### Users
+
+- `id`
+- `name`
+- `email`
+- `password`
+- `created_at`
+- `updated_at`
+
+### Posts
+
+- `id`
+- `title`
+- `content`
+- `slug`
+- `user_id`
+- `category_id`
+- `published`
+- `featured_image`
+- `created_at`
+- `updated_at`
+- `deleted_at`
+
+### Categories
+
+- `id`
+- `category_name`
+- `created_at`
+- `updated_at`
+
+### Tags
+
+- `id`
+- `tag_name`
+- `created_at`
+- `updated_at`
+
+### Comments
+
+- `id`
+- `post_id`
+- `comment_content`
+- `commented_by`
+- `commented_at`
+- `created_at`
+- `updated_at`
+
+### Post_Tag (Pivot Table)
+
+- `id`
+- `post_id`
+- `tag_id`
+- `created_at`
+- `updated_at`
 
 ## License
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+This project is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
