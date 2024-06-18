@@ -14,7 +14,7 @@ This project is a RESTful API built with the Laravel framework, providing user a
 1. **Clone the repository**
 
     ```bash
-    git clone https://github.com/yourusername/laravel-blog-api.git
+    git clone https://github.com/Pandey-Narendra/blog_Management_Restapi.git
     cd laravel-blog-api
     ```
 
